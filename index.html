@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PathFinder Pro - Advanced Navigation System</title>
+    <meta name="description" content="Advanced graph-based navigation system using Dijkstra, A*, BFS/DFS algorithms with real-time path visualization">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h1>PathFinder Pro</h1>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Nodes</span>
+                        <span class="stat-value" id="nodeCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Edges</span>
+                        <span class="stat-value" id="edgeCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Algorithm</span>
+                        <span class="stat-value" id="currentAlgo">Dijkstra</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Control Panel -->
+            <aside class="control-panel">
+                <div class="panel-section">
+                    <h2 class="panel-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                        Route Configuration
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label for="sourceNode">Source Location</label>
+                        <select id="sourceNode" class="select-input">
+                            <option value="">Select source...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="destNode">Destination Location</label>
+                        <select id="destNode" class="select-input">
+                            <option value="">Select destination...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="algorithm">Routing Algorithm</label>
+                        <select id="algorithm" class="select-input">
+                            <option value="dijkstra">Dijkstra's Algorithm</option>
+                            <option value="astar">A* Search</option>
+                            <option value="bfs">Breadth-First Search</option>
+                            <option value="dfs">Depth-First Search</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="heuristic">Heuristic Function (A* only)</label>
+                        <select id="heuristic" class="select-input">
+                            <option value="euclidean">Euclidean Distance</option>
+                            <option value="manhattan">Manhattan Distance</option>
+                            <option value="chebyshev">Chebyshev Distance</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="routingMode">Routing Mode</label>
+                        <select id="routingMode" class="select-input">
+                            <option value="shortest">Shortest Path</option>
+                            <option value="fastest">Fastest Route</option>
+                            <option value="scenic">Scenic Route</option>
+                        </select>
+                    </div>
+
+                    <button id="findPathBtn" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        Find Optimal Path
+                    </button>
+
+                    <button id="clearPathBtn" class="btn btn-secondary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                        </svg>
+                        Clear Path
+                    </button>
+                </div>
+
+                <div class="panel-section">
+                    <h2 class="panel-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 3h18v18H3z"/>
+                            <path d="M3 9h18M9 21V9"/>
+                        </svg>
+                        Map Controls
+                    </h2>
+
+                    <div class="form-group">
+                        <label for="mapData">Load Map Dataset</label>
+                        <select id="mapData" class="select-input">
+                            <option value="usa_cities">USA Major Cities</option>
+                            <option value="europe_cities">European Cities</option>
+                            <option value="india_cities">Indian Cities</option>
+                            <option value="custom">Custom Map</option>
+                        </select>
+                    </div>
+
+                    <button id="loadMapBtn" class="btn btn-accent">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                        Load Map
+                    </button>
+
+                    <div class="traffic-controls">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="trafficEnabled">
+                            <span>Enable Traffic Simulation</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="roadblocksEnabled">
+                            <span>Show Roadblocks</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2 class="panel-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                        Performance Metrics
+                    </h2>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">Nodes Visited</div>
+                            <div class="metric-value" id="nodesVisited">0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Execution Time</div>
+                            <div class="metric-value" id="execTime">0ms</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Path Length</div>
+                            <div class="metric-value" id="pathLength">0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Total Distance</div>
+                            <div class="metric-value" id="totalDistance">0 km</div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Visualization Area -->
+            <main class="visualization-area">
+                <div class="canvas-container">
+                    <canvas id="mapCanvas"></canvas>
+                    <div class="canvas-overlay">
+                        <div class="zoom-controls">
+                            <button id="zoomIn" class="zoom-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 8v8M8 12h8"/>
+                                </svg>
+                            </button>
+                            <button id="zoomOut" class="zoom-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M8 12h8"/>
+                                </svg>
+                            </button>
+                            <button id="resetView" class="zoom-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 12a9 9 0 019-9 9.75 9.75 0 016.74 2.74L21 8"/>
+                                    <path d="M21 3v5h-5"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Path Details Panel -->
+                <div class="path-details" id="pathDetails" style="display: none;">
+                    <div class="details-header">
+                        <h3>Route Details</h3>
+                        <button id="closeDetails" class="close-btn">×</button>
+                    </div>
+                    <div class="details-content" id="pathSteps"></div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Algorithm Visualization Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-color" style="background: var(--color-node);"></span>
+                <span>Unvisited Node</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: var(--color-visited);"></span>
+                <span>Visited Node</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: var(--color-path);"></span>
+                <span>Optimal Path</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: var(--color-source);"></span>
+                <span>Source</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: var(--color-destination);"></span>
+                <span>Destination</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/dataStructures.js"></script>
+    <script src="js/algorithms.js"></script>
+    <script src="js/mapData.js"></script>
+    <script src="js/visualization.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

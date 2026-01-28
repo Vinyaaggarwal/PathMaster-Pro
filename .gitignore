@@ -1,0 +1,26 @@
+# C++
+build/
+bin/
+obj/
+*.exe
+*.o
+*.a
+*.so
+*.dylib
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Javascript / Web
+node_modules/
+dist/
+.DS_Store
+
+# Git
+.git/
