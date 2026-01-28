@@ -106,4 +106,3 @@ Feel free to fork this project and submit PRs for:
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
-**Built with ❤️ for algorithm enthusiasts and developers.** 🗺️✨
